@@ -1,0 +1,29 @@
+{
+  "name": "example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "phaser": "link:../node_modules/phaser",
+    "react": "link:../node_modules/react",
+    "react-angpao-rain": "link:..",
+    "react-dom": "link:../node_modules/react-dom"
+  },
+  "devDependencies": {
+    "@swc/core": "1.11.24",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.0.11"
+  },
+  "resolutions": {
+    "@swc/core": "1.11.24"
+  },
+  "packageManager": "yarn@1.22.22"
+}

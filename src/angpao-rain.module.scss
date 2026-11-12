@@ -1,0 +1,74 @@
+// Plus Jakarta Sans is used for the in-game text (score, timer, prize)
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap');
+
+// Game: fills its parent, Phaser scales and centers the canvas inside
+.root {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    // the player is moved by dragging, so don't let the page scroll or zoom
+    touch-action: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    canvas {
+        display: block;
+    }
+}
+
+// Launcher: floating button
+.launcher-button {
+    position: fixed;
+    right: var(--angpao-rain-button-offset, 16px);
+    bottom: var(--angpao-rain-button-offset, 16px);
+    z-index: var(--angpao-rain-z-index, 1000);
+    width: var(--angpao-rain-button-size, 120px);
+    height: var(--angpao-rain-button-size, 120px);
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: transform .2s ease;
+    -webkit-tap-highlight-color: transparent;
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        pointer-events: none;
+    }
+
+    &:hover {
+        transform: scale(1.06);
+    }
+
+    &:active {
+        transform: scale(.96);
+    }
+
+    &:focus-visible {
+        outline: 3px solid #ffd36b;
+        outline-offset: 2px;
+        border-radius: 50%;
+    }
+}
+
+// Launcher: full-screen overlay
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--angpao-rain-z-index, 1000);
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: var(--angpao-rain-backdrop, rgba(0, 0, 0, .85));
+    animation: angpao-rain-fade-in .2s ease-out;
+}
+
+@keyframes angpao-rain-fade-in {
+    from {
+        opacity: 0;
+    }
+}
