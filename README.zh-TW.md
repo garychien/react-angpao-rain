@@ -97,7 +97,7 @@ import {AngpaoRain} from 'react-angpao-rain';
 | `onClaim` | `(result: DrawResult) => void` | | 玩家按下結果頁的領取按鈕。 |
 | `onClose` | `() => void` | | 玩家按下標題頁的關閉按鈕。 |
 | `onGameOver` | `(info: {score, time}) => void` | | 時間到，在 `onDraw` 之前觸發。 |
-| `onError` | `(error: unknown) => void` | | `onDraw` reject，或主題的圖片不齊全、載入失敗。沒有傳入時，圖片錯誤會印在 console。 |
+| `onError` | `(error: unknown) => void` | | `onDraw` reject 或回傳格式錯誤，或主題的圖片不齊全、載入失敗。沒有傳入時，錯誤會用 `console.error` 印出。 |
 | `theme` | `AngpaoRainTheme` | `defaultTheme` | 遊戲的美術，見[主題](#主題)。 |
 | `locale` | `'en-US' \| 'zh-CN'` | `'en-US'` | 遊戲內圖片文字的語言（英文或簡體中文）。 |
 | `duration` | `number` | `10` | 每局秒數。 |
@@ -135,7 +135,10 @@ interface DrawResult {
 }
 ```
 
-`type` 是獎項圖片的編號，範圍 `0` 到 `12`（見[獎項圖片](#獎項圖片)），超出範圍的資料會被略過。如果 `onDraw` reject 或回傳格式錯誤，會呼叫 `onError`，並顯示空的結果（`0`），玩家仍然可以走完流程並關閉遊戲。
+`type` 是獎項圖片的編號，範圍 `0` 到 `12`（見[獎項圖片](#獎項圖片)）。發生以下情況時，玩家仍然可以走完流程並關閉遊戲：
+
+- `onDraw` reject：呼叫 `onError`，並顯示空的結果（`0`）。
+- `onDraw` 回傳格式錯誤：呼叫 `onError` 並說明哪裡有問題，畫面只顯示合法的部分。沒有合法 `type` 的資料會被略過，超過 13 筆的部分不顯示，沒有 `result` 時顯示 `0`。
 
 ### `AngpaoRainLocale`
 
@@ -246,7 +249,6 @@ interface AngpaoRainTheme {
 |  | `title-glow.png` | 1080 × 857 | logo 後方的光暈 |
 |  | `title-angpao.png` | 500 × 504 | 大紅包 |
 |  | `title-coin-01.png`<br>`title-coin-02.png`<br>`title-coin-03.png` | 200 × 155<br>150 × 263<br>200 × 178 | logo 周圍的裝飾 |
-|  | `title-line.png` | 400 × 400 | 光線 |
 |  | `star-01.png` | 200 × 264 | 閃光；遊戲中也會掉落 |
 |  | `btn-start-en.png`<br>`btn-start-cn.png` | 600 × 158 | 開始按鈕 |
 |  | `btn-close.png` | 100 × 100 | 關閉按鈕 |

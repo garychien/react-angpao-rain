@@ -35,7 +35,8 @@ export interface GameOverInfo {
 export interface AngpaoRainCallbacks {
     /**
      * Called when the round ends. Resolve with the prize to show (e.g. by calling your backend).
-     * If it rejects, `onError` is called and an empty result is shown.
+     * If it rejects, `onError` is called and an empty result is shown. If it resolves with a
+     * malformed result, `onError` is called too and the valid part is shown.
      */
     onDraw: (request: DrawRequest) => Promise<DrawResult>
     /** The player pressed the "receive" button on the result screen */
@@ -44,7 +45,10 @@ export interface AngpaoRainCallbacks {
     onClose?: () => void
     /** The timer ran out, before `onDraw` is called */
     onGameOver?: (info: GameOverInfo) => void
-    /** `onDraw` rejected, or the theme's images are incomplete or failed to load */
+    /**
+     * `onDraw` rejected or resolved with a malformed result, or the theme's images are incomplete
+     * or failed to load. Without it, errors are logged with `console.error`.
+     */
     onError?: (error: unknown) => void
 }
 

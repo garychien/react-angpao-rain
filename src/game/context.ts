@@ -17,6 +17,13 @@ export interface GameContext {
     alive: boolean
 }
 
+/** Pass an error to `onError`, or log it when the app didn't provide one, so errors are never silent */
+export const reportError = (ctx: Pick<GameContext, 'callbacks'>, error: unknown) => {
+    const {onError} = ctx.callbacks.current;
+    if (onError) onError(error);
+    else console.error(error);
+};
+
 export const DEFAULT_COLORS: Required<AngpaoRainThemeColors> = {text: '#ffffff', total: '#3BAEDD'};
 
 export const SCENE = {

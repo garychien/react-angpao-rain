@@ -200,7 +200,6 @@ await render('title-coin-02.png', svg(300, 520, candyCane(110, 230, 190, 8)), {f
 await render('title-coin-03.png', svg(420, 420, bell(210, 230, 150, -12)), {fit: true, pad: 4});
 await render('star-01.png', svg(...size('star-01.png'), snowflake(100, 132, 78, {sw: 9})));
 await render('title-glow.png', glow('title-glow.png', 'url(#gGlowIce)'));
-await render('title-line.png', svg(400, 400, streak(200, 200, 360, -40, 7) + sparkle(200, 200, 30, {glow: false})));
 await render('glare_v2.png', glare());
 
 // masthead

@@ -211,7 +211,6 @@ await render('title-coin-02.png', svg(300, 520, lantern(150, 250, 210, {rot: 6})
 await render('title-coin-03.png', svg(460, 400, ingot(230, 210, 190, {rot: -8})), {fit: true, pad: 4});
 await render('star-01.png', svg(...size('star-01.png'), sparkle(100, 132, 86, {color: '#ffe680', ry: 120})));
 await render('title-glow.png', glow('title-glow.png'));
-await render('title-line.png', svg(400, 400, streak(200, 200, 360, -40, 7) + sparkle(200, 200, 30, {glow: false})));
 await render('glare_v2.png', glare());
 
 // masthead

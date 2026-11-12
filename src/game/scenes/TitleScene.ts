@@ -29,10 +29,6 @@ export class TitleScene extends Phaser.Scene {
         // animation order
         const angpaoList = [angpao03, angpao02, angpao01];
         const coinList = [coin02, coin03, coin01];
-        // decorative lines (never animated in, kept for parity with the original layout)
-        this.add.sprite(cx + 120 * r, cy - 320 * r, 'title-line').setScale(r * 0.5).setAlpha(0);
-        this.add.sprite(cx - 400 * r, cy + 300 * r, 'title-line').setScale(r * 0.5).setAlpha(0);
-        this.add.sprite(cx + 280 * r, cy + 200 * r, 'title-line').setScale(r * 0.5).setAlpha(0);
         const starList = [
             this.add.sprite(cx - 480 * r, cy + 250 * r, 'star-01').setScale(r * 0.5).setAlpha(0),
             this.add.sprite(cx - 350 * r, cy + 550 * r, 'star-01').setScale(r * 0.5).setAlpha(0),

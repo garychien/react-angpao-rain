@@ -265,10 +265,6 @@ export const THEME_IMAGE_SPEC = {
         "width": 1080,
         "height": 857
     },
-    "title-line.png": {
-        "width": 400,
-        "height": 400
-    },
     "title-masthead.png": {
         "width": 1082,
         "height": 595

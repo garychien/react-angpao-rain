@@ -14,7 +14,6 @@ export const IMAGE_FILES = {
     'title-masthead': 'title-masthead.png',
     'title-glow': 'title-glow.png',
     'title-angpao': 'title-angpao.png',
-    'title-line': 'title-line.png',
 
     // countdown
     'btn-mask': 'btn-mask.png',

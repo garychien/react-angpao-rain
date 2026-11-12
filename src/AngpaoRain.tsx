@@ -3,7 +3,7 @@ import {useEffect, useRef} from 'react';
 import styles from './angpao-rain.module.scss';
 import {DEFAULT_LOCALE, defaultFormatAmount, defaultGameOptions, localeToArtworkLang} from './config';
 import {resolveTextureUrls} from './game/assets';
-import {DEFAULT_COLORS, type GameContext} from './game/context';
+import {DEFAULT_COLORS, type GameContext, reportError} from './game/context';
 import {createGame} from './game/createGame';
 import {defaultTheme} from './themes/default';
 import type {AngpaoRainCallbacks, AngpaoRainProps} from './types';
@@ -75,9 +75,7 @@ const AngpaoRain = ({
             })
             .catch(error => {
                 if (!ctx.alive) return;
-                const {onError} = callbacksRef.current;
-                if (onError) onError(error);
-                else console.error(error);
+                reportError(ctx, error);
             });
 
         return () => {

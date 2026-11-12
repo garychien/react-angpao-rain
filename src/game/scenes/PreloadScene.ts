@@ -3,7 +3,7 @@ import * as Phaser from 'phaser';
 import {FONT_FAMILY} from '../../config';
 import {THEME_IMAGE_SPEC} from '../../themes/spec';
 import {IMAGE_FILES, SPRITESHEET_FILES, textureFileName,type TextureKey} from '../assets';
-import {ANIM, type GameContext, SCENE} from '../context';
+import {ANIM, type GameContext, reportError, SCENE} from '../context';
 
 const LOADING_BAR_KEYS = ['loadingbar_bg', 'loadingbar_fill'] as const;
 
@@ -77,10 +77,7 @@ export class PreloadScene extends Phaser.Scene {
         const failed = keys.filter(key => !this.textures.exists(key));
         if (failed.length) {
             const files = failed.map(textureFileName);
-            const error = new Error(`${prefix}: ${files.length} image(s) failed to load: ${files.join(', ')}`);
-            const {onError} = this.ctx.callbacks.current;
-            if (onError) onError(error);
-            else console.error(error);
+            reportError(this.ctx, new Error(`${prefix}: ${files.length} image(s) failed to load: ${files.join(', ')}`));
         }
 
         const wrongSize: string[] = [];

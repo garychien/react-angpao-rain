@@ -45,6 +45,31 @@ export const defaultFormatAmount = (value: number | string) => `RM ${value}`;
 /** Remaining time shown under the timer bar, in whole seconds: `5` → `'05s'`, `90` → `'90s'` */
 export const formatRemainingTime = (seconds: number) => `${String(Math.max(0, seconds)).padStart(2, '0')}s`;
 
+const isValidPrizeType = (row: unknown) => {
+    const type = (row as Partial<DrawResult['counts'][number]> | null)?.type;
+    return typeof type === 'number' && Number.isInteger(type) && type >= 0 && type < PRIZE_TYPE_COUNT;
+};
+
+/**
+ * Everything wrong with a value `onDraw` resolved with, as readable messages; empty when it is valid.
+ * `normalizeDrawResult` cleans up the same problems so the game can still show it.
+ */
+export const drawResultProblems = (value: unknown): string[] => {
+    if (!value || typeof value !== 'object') return [`expected {counts, result}, got ${value === null ? 'null' : typeof value}`];
+    const {counts, result} = value as Partial<DrawResult>;
+    const problems: string[] = [];
+    if (!Array.isArray(counts)) {
+        problems.push('counts is not an array');
+    } else {
+        const unknown = counts.filter(row => !isValidPrizeType(row)).length;
+        if (unknown) problems.push(`${unknown} row(s) in counts have no prize type 0 – ${PRIZE_TYPE_COUNT - 1} and were dropped`);
+        const valid = counts.length - unknown;
+        if (valid > PRIZE_TYPE_COUNT) problems.push(`counts has ${valid} rows, only the first ${PRIZE_TYPE_COUNT} are shown`);
+    }
+    if (typeof result !== 'number' && typeof result !== 'string') problems.push('result is not a number or string, 0 is shown');
+    return problems;
+};
+
 /** Make sure whatever `onDraw` returned can be rendered without crashing the scene */
 export const normalizeDrawResult = (value: unknown): DrawResult => {
     if (!value || typeof value !== 'object') return EMPTY_DRAW_RESULT;
@@ -52,7 +77,7 @@ export const normalizeDrawResult = (value: unknown): DrawResult => {
     return {
         counts: Array.isArray(counts)
             ? counts
-                .filter(row => row && Number.isInteger(row.type) && row.type >= 0 && row.type < PRIZE_TYPE_COUNT)
+                .filter(isValidPrizeType)
                 .slice(0, PRIZE_TYPE_COUNT)
             : [],
         result: typeof result === 'number' || typeof result === 'string' ? result : 0,

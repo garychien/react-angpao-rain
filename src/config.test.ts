@@ -1,4 +1,4 @@
-import {EMPTY_DRAW_RESULT, formatRemainingTime, localeToArtworkLang, normalizeDrawResult} from './config';
+import {drawResultProblems, EMPTY_DRAW_RESULT, formatRemainingTime, localeToArtworkLang, normalizeDrawResult} from './config';
 import type {AngpaoRainLocale} from './types';
 
 describe('localeToArtworkLang', () => {
@@ -52,5 +52,33 @@ describe('formatRemainingTime', () => {
         [125, '125s'],
     ])('%i → %s', (seconds, expected) => {
         expect(formatRemainingTime(seconds)).toBe(expected);
+    });
+});
+
+describe('drawResultProblems', () => {
+    it('accepts a valid result', () => {
+        expect(drawResultProblems({counts: [{type: 0, amount: 3}, {type: 12, amount: '5'}], result: 88})).toEqual([]);
+        expect(drawResultProblems({counts: [], result: '0.00'})).toEqual([]);
+    });
+
+    it('rejects values that are not an object', () => {
+        expect(drawResultProblems(null)).toEqual(['expected {counts, result}, got null']);
+        expect(drawResultProblems(undefined)).toEqual(['expected {counts, result}, got undefined']);
+        expect(drawResultProblems('oops')).toEqual(['expected {counts, result}, got string']);
+    });
+
+    it('lists every problem', () => {
+        expect(drawResultProblems({counts: 'x'})).toEqual([
+            'counts is not an array',
+            'result is not a number or string, 0 is shown',
+        ]);
+        expect(drawResultProblems({counts: [{type: 0, amount: 1}, {type: 13, amount: 1}, null, {type: '1', amount: 1}], result: 1})).toEqual([
+            '3 row(s) in counts have no prize type 0 – 12 and were dropped',
+        ]);
+    });
+
+    it('flags more rows than the summary can show', () => {
+        const counts = Array.from({length: 14}, () => ({type: 1, amount: 1}));
+        expect(drawResultProblems({counts, result: 1})).toEqual(['counts has 14 rows, only the first 13 are shown']);
     });
 });

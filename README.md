@@ -97,7 +97,7 @@ Loading → Title → Countdown → Play (duration) → Time's up → Summary (5
 | `onClaim` | `(result: DrawResult) => void` | | Player pressed the receive button on the result screen. |
 | `onClose` | `() => void` | | Player pressed the close button on the title screen. |
 | `onGameOver` | `(info: {score, time}) => void` | | Timer ran out, just before `onDraw`. |
-| `onError` | `(error: unknown) => void` | | `onDraw` rejected, or the theme's images are incomplete or failed to load. Without it, image errors are logged to the console. |
+| `onError` | `(error: unknown) => void` | | `onDraw` rejected or resolved with a malformed result, or the theme's images are incomplete or failed to load. Without it, errors are logged with `console.error`. |
 | `theme` | `AngpaoRainTheme` | `defaultTheme` | Artwork of the game, see [Themes](#themes). |
 | `locale` | `'en-US' \| 'zh-CN'` | `'en-US'` | Language of the in-game artwork (English or Simplified Chinese). |
 | `duration` | `number` | `10` | Round length in seconds. |
@@ -135,7 +135,10 @@ interface DrawResult {
 }
 ```
 
-`type` is the prize artwork index, `0` – `12` (see [prize artwork](#prize-artwork)). Rows with an unknown type are dropped. If `onDraw` rejects or returns something malformed, `onError` is called and the game shows an empty result (`0`), so the player can still finish and close the game.
+`type` is the prize artwork index, `0` – `12` (see [prize artwork](#prize-artwork)). Either way the player can still finish and close the game:
+
+- `onDraw` rejects: `onError` is called and the game shows an empty result (`0`).
+- `onDraw` resolves with a malformed result: `onError` is called with what is wrong, and the game shows the valid part. Rows without a known `type` are dropped, rows past the 13th are not shown, and a missing `result` shows `0`.
 
 ### `AngpaoRainLocale`
 
@@ -246,7 +249,6 @@ The game checks every theme when it starts:
 |  | `title-glow.png` | 1080 × 857 | Glow behind the logo |
 |  | `title-angpao.png` | 500 × 504 | Big envelope |
 |  | `title-coin-01.png`<br>`title-coin-02.png`<br>`title-coin-03.png` | 200 × 155<br>150 × 263<br>200 × 178 | Decorations around the logo |
-|  | `title-line.png` | 400 × 400 | Light streak |
 |  | `star-01.png` | 200 × 264 | Sparkle; also falls during play |
 |  | `btn-start-en.png`<br>`btn-start-cn.png` | 600 × 158 | Start button |
 |  | `btn-close.png` | 100 × 100 | Close button |

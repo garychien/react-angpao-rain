@@ -1,8 +1,8 @@
 import * as Phaser from 'phaser';
 
-import {EMPTY_DRAW_RESULT, FONT_FAMILY, formatRemainingTime, normalizeDrawResult} from '../../config';
+import {drawResultProblems, EMPTY_DRAW_RESULT, FONT_FAMILY, formatRemainingTime, normalizeDrawResult} from '../../config';
 import type {DrawResult} from '../../types';
-import {ANIM, type GameContext, SCENE} from '../context';
+import {ANIM, type GameContext, reportError, SCENE} from '../context';
 
 type Bag = Phaser.Physics.Arcade.Sprite & {
     speed: number,
@@ -514,13 +514,19 @@ export class GameScene extends Phaser.Scene {
     }
 
     private async requestDraw(score: number): Promise<DrawResult> {
-        const {onDraw, onError} = this.ctx.callbacks.current;
+        let value: unknown;
         try {
-            return normalizeDrawResult(await onDraw({score}));
+            value = await this.ctx.callbacks.current.onDraw({score});
         } catch (error) {
-            onError?.(error);
+            reportError(this.ctx, error);
             return EMPTY_DRAW_RESULT;
         }
+        // a malformed result is still shown (cleaned up), but the app should hear about it
+        const problems = drawResultProblems(value);
+        if (problems.length) {
+            reportError(this.ctx, new Error(`[react-angpao-rain] onDraw resolved with an invalid result: ${problems.join('; ')}`));
+        }
+        return normalizeDrawResult(value);
     }
 
     private animateTimeUp(): void {
